@@ -1,6 +1,6 @@
-namespace Algorithm;
+namespace Core.Algorithm.Interfaces;
 
-interface ICalculator
+public interface ICalculator
 {
   double Calculate(string s);
 }
