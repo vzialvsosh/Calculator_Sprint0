@@ -22,9 +22,13 @@ public class CalculatorController : ControllerBase
             double result = _calculator.Calculate(expression);
             return Ok(new { result });
         }
-        catch (Exception ex)
+        catch (ArgumentException ex)
         {
             return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "An error occurred while processing the request.");
         }
     }
 }
