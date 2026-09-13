@@ -1,7 +1,7 @@
-using Core.Algorithm.Interfaces;
+using Core.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Core.Algorithm.Implementations;
+namespace Core.Repository.Implementations;
 
 public class HistoryRepository(AppDbContext db) : IHistoryRepository
 {

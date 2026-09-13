@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Core.Repository.Interfaces;
 
-namespace Core.Algorithm.Implementations;
+namespace Core.Repository.Implementations;
 
 public class AppDbContext : DbContext
 {

@@ -1,4 +1,4 @@
-namespace Core.Algorithm.Implementations;
+namespace Core.Repository.Interfaces;
 
 public class Calculation
 {

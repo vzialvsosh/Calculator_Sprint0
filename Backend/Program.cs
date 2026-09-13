@@ -1,5 +1,7 @@
 using Core.Algorithm.Interfaces;
 using Core.Algorithm.Implementations;
+using Core.Repository.Interfaces;
+using Core.Repository.Implementations;
 using Microsoft.EntityFrameworkCore;
 
 try

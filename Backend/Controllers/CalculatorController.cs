@@ -1,6 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
-using Core.Algorithm.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using Core.Repository.Interfaces;
+using Core.Algorithm.Interfaces;
 
 namespace Backend.Controllers;
 
@@ -61,7 +62,7 @@ public class CalculatorController : ControllerBase
             var deleted = await _history.DeleteByIdAsync(id);
             if (!deleted)
             {
-                return NotFound(new { message = $"Запись с ID {id} не найдена." });
+                return NotFound($"ID {id} not founded");
             }
         }
         catch (Exception)

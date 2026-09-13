@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-namespace Core.Algorithm.Interfaces;
+
+namespace Core.Repository.Interfaces;
 
 public interface IHistoryRepository
 {
