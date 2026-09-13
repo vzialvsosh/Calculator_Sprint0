@@ -57,7 +57,8 @@ public class Calculator : ICalculator
     bool prevCanBeOperand = false;
     for (int i = 0; i < tokens.Count; ++i)
     {
-      if (double.TryParse(tokens[i], NumberStyles.Any, CultureInfo.InvariantCulture, out double x))
+      if (double.TryParse(tokens[i], NumberStyles.Any, CultureInfo.InvariantCulture, out double x) ||
+        Variables.Vars.TryGetValue(tokens[i], out x))
       {
         operands.Push(x);
         prevCanBeOperand = true;
@@ -65,15 +66,6 @@ public class Calculator : ICalculator
       }
 
       Operation oper = new Operation(tokens[i], prevCanBeOperand);
-      // if (oper.Type == OperType.minus && !prevCanBeOperand)
-      // {
-      //   ++i;
-      //   if (i >= tokens.Count) throw new ArgumentException("Invalid expression: unary minus is not followed by a number.");
-      //   if (!double.TryParse(tokens[i], out x)) throw new ArgumentException("Invalid expression: unary minus is not followed by a number.");
-      //   ApplyUnaryOperation(oper, x, operands);
-      //   prevCanBeOperand = true;
-      //   continue;
-      // }
 
       if (oper.Type == OperType.clos_par)
       {
@@ -91,7 +83,7 @@ public class Calculator : ICalculator
         continue;
       }
       while (operations.Count > 0 && (operations.Peek().Priority > oper.Priority ||
-      (oper.Type != OperType.pow && operations.Peek().Priority == oper.Priority)))
+      (oper.Type != OperType.pow && !oper.IsUnary && operations.Peek().Priority == oper.Priority)))
         Apply(operations, operands);
       operations.Push(oper);
       prevCanBeOperand = false;

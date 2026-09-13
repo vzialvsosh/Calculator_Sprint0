@@ -8,13 +8,14 @@ public class Parser : IParser
   bool IsPartOfDouble(char c)
   {
     if (char.IsDigit(c)) return true;
-    if (c == '.' || c == ',') return true;
+    if (c == '.') return true;
     return false;
   }
 
-  List<string> ParseWithoutSpaces(string s)
+  List<string> ParsePreprocessed(string s)
   {
     List<string> tokens = new List<string>();
+    int maxLength = Math.Max(Operation.MaxOperationLength, Variables.MaxVariableLength);
 
     int i = 0, j = 0;
     while (j < s.Length)
@@ -24,7 +25,8 @@ public class Parser : IParser
         while (j < s.Length && IsPartOfDouble(s[j]))
           ++j;
       else
-        while (j < s.Length && j - i <= Operation.MaxOperationLength && !Operation.OperTypes.ContainsKey(s[i..j]))
+        while (j < s.Length && j - i <= maxLength &&
+          !Operation.OperTypes.ContainsKey(s[i..j]) && !Variables.Vars.ContainsKey(s[i..j]))
           ++j;
       tokens.Add(s[i..j]);
       i = j;
@@ -44,5 +46,5 @@ public class Parser : IParser
     return res.ToString();
   }
 
-  public List<string> Parse(string s) => ParseWithoutSpaces(Preprocess(s));
+  public List<string> Parse(string s) => ParsePreprocessed(Preprocess(s));
 }
