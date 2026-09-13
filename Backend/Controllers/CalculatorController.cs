@@ -26,26 +26,31 @@ public class CalculatorController : ControllerBase
             await _history.SaveAsync(expression, result);
             return Ok(new { result });
         }
-        catch (DbUpdateException ex)
-        {
-            // Настоящая ошибка SQLite от СУБД:
-            Console.WriteLine($"Ошибка БД: {ex.InnerException?.Message}");
-            throw;
-        }
         catch (ArgumentException ex)
         {
             return BadRequest(ex.Message);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return StatusCode(500, ex.Message);
+            return StatusCode(500, "An error occurred while processing the request");
         }
     }
 
     [HttpGet("history")]
     public async Task<IActionResult> GetHistory([FromQuery] int count = 20)
     {
-        var history = await _history.GetRecentAsync(count);
-        return Ok(history);
+        if (count <= 0)
+        {
+            return BadRequest("Count must be a positive integer");
+        }
+        try
+        {
+            var history = await _history.GetRecentAsync(count);
+            return Ok(history);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occurred while processing the request");
+        }
     }
 }

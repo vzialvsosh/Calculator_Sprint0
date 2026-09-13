@@ -16,6 +16,7 @@ public class HistoryRepository(AppDbContext db) : IHistoryRepository
     public async Task<IEnumerable<CalculationDto>> GetRecentAsync(int count = 20)
     {
         return await _db.History
+            .AsNoTracking()
             .OrderByDescending(h => h.CreatedAt)
             .Take(count)
             .Select(h => new CalculationDto(h.Expression, h.Result))
