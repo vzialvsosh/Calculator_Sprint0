@@ -1,4 +1,4 @@
-namespace Algorithm.Interfaces;
+namespace Core.Algorithm.Interfaces;
 
 public interface IParser
 {

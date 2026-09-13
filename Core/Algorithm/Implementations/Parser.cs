@@ -1,7 +1,7 @@
 using System.Text;
-using Algorithm.Interfaces;
+using Core.Algorithm.Interfaces;
 
-namespace Algorithm.Implementations;
+namespace Core.Algorithm.Implementations;
 
 public class Parser : IParser
 {

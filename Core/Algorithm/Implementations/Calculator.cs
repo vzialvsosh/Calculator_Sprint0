@@ -1,7 +1,7 @@
 using System.Globalization;
-using Algorithm.Interfaces;
+using Core.Algorithm.Interfaces;
 
-namespace Algorithm.Implementations;
+namespace Core.Algorithm.Implementations;
 
 public class Calculator : ICalculator
 {

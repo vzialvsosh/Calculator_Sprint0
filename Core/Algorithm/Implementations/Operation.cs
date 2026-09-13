@@ -1,4 +1,4 @@
-namespace Algorithm.Implementations;
+namespace Core.Algorithm.Implementations;
 
 public enum OperType
 {
