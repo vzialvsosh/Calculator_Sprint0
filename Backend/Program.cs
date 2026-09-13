@@ -1,5 +1,6 @@
 using Core.Algorithm.Interfaces;
 using Core.Algorithm.Implementations;
+using Microsoft.EntityFrameworkCore;
 
 try
 {
@@ -12,8 +13,18 @@ try
 
     builder.Services.AddSingleton<ICalculator, Calculator>();
     builder.Services.AddSingleton<IParser, Parser>();
+    builder.Services.AddScoped<IHistoryRepository, HistoryRepository>();
+
+    builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite("Data Source=calculator.db"));
 
     var app = builder.Build();
+
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        db.Database.EnsureCreated();
+    }
 
     if (app.Environment.IsDevelopment())
     {
