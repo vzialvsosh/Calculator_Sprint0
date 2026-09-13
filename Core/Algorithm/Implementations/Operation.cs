@@ -69,7 +69,7 @@ public class Operation
     OperType.div => 1,
     OperType.pow => 2,
 
-    OperType.unary_minus => 5,
+    OperType.unary_minus => 2,
     OperType.abs => 5,
     OperType.log => 5,
     OperType.sin => 5,
