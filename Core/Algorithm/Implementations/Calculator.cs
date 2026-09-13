@@ -94,6 +94,6 @@ public class Calculator : ICalculator
 
     if (operands.Count != 1) throw new ArgumentException("Invalid expression.");
 
-    return operands.First();
+    return operands.Peek();
   }
 }

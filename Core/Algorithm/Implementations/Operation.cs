@@ -25,7 +25,6 @@ public enum OperType
 
 public class Operation
 {
-  public const int MaxOperationLength = 7;
   public static IReadOnlyDictionary<string, OperType> OperTypes = new Dictionary<string, OperType>(){
     { "+", OperType.plus },
     { "-", OperType.minus },
@@ -45,6 +44,7 @@ public class Operation
     { "(", OperType.open_par },
     { ")", OperType.clos_par },
   };
+  public static readonly int MaxOperationLength = OperTypes.Keys.MaxBy((p) => p.Length)?.Length ?? 1;
 
   public readonly OperType Type;
 
