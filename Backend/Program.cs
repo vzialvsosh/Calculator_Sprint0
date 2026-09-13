@@ -11,6 +11,7 @@ try
     builder.Services.AddSwaggerGen();
 
     builder.Services.AddSingleton<ICalculator, Calculator>();
+    builder.Services.AddSingleton<IParser, Parser>();
 
     var app = builder.Build();
 
