@@ -14,15 +14,14 @@ public class Calculator : ICalculator
 
   public double Calculate(string s)
   {
-    return Calculate(_parser.Parse(s));
+    double result = Calculate(_parser.Parse(s));
+    if (result == double.NaN || result == double.PositiveInfinity || result == double.NegativeInfinity)
+      throw new InvalidOperationException("Arithmetical error occured while calculating.");
+    return result;
   }
 
   void ApplyBinaryOperation(Operation oper, Stack<double> operands)
   {
-    // Operation oper = operations.Peek();
-    // operations.Pop();
-
-    // if (oper.Type == OperType.open_par) return;
     if (operands.Count < 2) throw new ArgumentException("Invalid expression.");
 
     double b = operands.Peek();
