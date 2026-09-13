@@ -19,7 +19,22 @@ public class HistoryRepository(AppDbContext db) : IHistoryRepository
             .AsNoTracking()
             .OrderByDescending(h => h.CreatedAt)
             .Take(count)
-            .Select(h => new CalculationDto(h.Expression, h.Result))
+            .Select(h => new CalculationDto(h.Expression, h.Result, h.Id))
             .ToListAsync();
+    }
+
+    public async Task<bool> DeleteByIdAsync(Guid id)
+    {
+        var item = await _db.History.FindAsync(id);
+        if (item == null) return false;
+
+        _db.History.Remove(item);
+        await _db.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task ClearAllAsync()
+    {
+        await _db.History.ExecuteDeleteAsync();
     }
 }

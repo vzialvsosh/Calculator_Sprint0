@@ -53,4 +53,28 @@ public class CalculatorController : ControllerBase
             return StatusCode(500, "An error occurred while processing the request");
         }
     }
+
+    [HttpDelete("history/{id:guid}")]
+    public async Task<IActionResult> DeleteItem(Guid id)
+    {
+        try {
+            var deleted = await _history.DeleteByIdAsync(id);
+            if (!deleted)
+            {
+                return NotFound(new { message = $"Запись с ID {id} не найдена." });
+            }
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occurred while processing the request");
+        }
+        return Ok($"ID {id} deleted");
+    }
+
+    [HttpDelete("history")]
+    public async Task<IActionResult> ClearHistory()
+    {
+        await _history.ClearAllAsync();
+        return Ok("History cleared");
+    }
 }
