@@ -1,14 +1,10 @@
 using System.Text;
+using Algorithm.Interfaces;
 
-namespace Algorithm;
+namespace Algorithm.Implementations;
 
 public class Parser : IParser
 {
-  public List<string> Pars(string s)
-  {
-    return ["(", "2", "+", "3", ")", "^", "2", "*", "4", "-", "(", "8", "/", "4", ")", "+", "1"];
-  }
-
   bool IsPartOfDouble(char c)
   {
     if (char.IsDigit(c)) return true;
@@ -28,23 +24,25 @@ public class Parser : IParser
         while (j < s.Length && IsPartOfDouble(s[j]))
           ++j;
       else
-        while (j < s.Length && !Operation.OperTypes.ContainsKey(s.Substring(i, j - i)))
+        while (j < s.Length && j - i <= Operation.MaxOperationLength && !Operation.OperTypes.ContainsKey(s[i..j]))
           ++j;
-      tokens.Add(s.Substring(i, j - i));
+      tokens.Add(s[i..j]);
       i = j;
     }
     return tokens;
   }
 
-  string SkipSpaces(string s)
+  string Preprocess(string s)
   {
     StringBuilder res = new StringBuilder();
     for (int i = 0; i < s.Length; ++i)
     {
-      if (s[i] != ' ') res.Append(s[i]);
+      if (char.IsWhiteSpace(s[i])) continue;
+      if (s[i] == ',') res.Append('.');
+      else res.Append(s[i]);
     }
     return res.ToString();
   }
 
-  public List<string> Parse(string s) => ParseWithoutSpaces(SkipSpaces(s));
+  public List<string> Parse(string s) => ParseWithoutSpaces(Preprocess(s));
 }
