@@ -31,7 +31,8 @@ public partial class MainWindow : Window
         Operation,
         Dot,
         OpnBracket,
-        ClsBracket
+        ClsBracket,
+        UnaryMinus
     }
 
     private const double NormalFontSize = 36;
@@ -41,7 +42,6 @@ public partial class MainWindow : Window
 
     private LastType _lastType = LastType.Empty;
 
-    private bool IsEnabled = true;
 
     public MainWindow()
     {
@@ -78,6 +78,93 @@ public partial class MainWindow : Window
         UpdateDisplay();
     }
 
+    private void Backspace_Click(object? sender, RoutedEventArgs e)
+{
+    _currentInput = _currentInput.TrimEnd();
+
+    if (_currentInput.Length == 0)
+        return; 
+
+    int removeCount = 1;
+
+    if (_currentInput.EndsWith("sin(") ||
+        _currentInput.EndsWith("cos(") ||
+        _currentInput.EndsWith("log("))
+    {
+        removeCount = 4;
+    }
+    else if (_currentInput.EndsWith("pi"))
+    {
+        removeCount = 2;
+    }
+
+    int newLength = _currentInput.Length - removeCount;
+    _currentInput = _currentInput.Substring(0, newLength);
+    _currentInput = _currentInput.TrimEnd();
+
+    if (_currentInput.Length == 0)
+    {
+        ResetState();
+        _lastType = LastType.Empty;
+        UpdateDisplay();
+        return;
+    }
+
+    char last = _currentInput[_currentInput.Length - 1];
+
+    if (last == '(')
+    {
+        _lastType = LastType.OpnBracket;
+    }
+    else if (last == ')')
+    {
+        _lastType = LastType.ClsBracket;
+    }
+    else if (last == '.')
+    {
+        _lastType = LastType.Dot;
+    }
+    else if (last == '-')
+    {
+        string beforeMinus = _currentInput.Substring(
+            0, _currentInput.Length - 1
+        );
+        beforeMinus = beforeMinus.TrimEnd();
+
+        if (beforeMinus.Length == 0)
+        {
+            _lastType = LastType.UnaryMinus;
+        }
+        else
+        {
+            char previous = beforeMinus[beforeMinus.Length - 1];
+
+            if (previous == '(' ||
+                previous == '+' ||
+                previous == '-' ||
+                previous == '*' ||
+                previous == '/')
+            {
+                _lastType = LastType.UnaryMinus;
+            }
+            else
+            {
+                _lastType = LastType.Operation;
+            }
+        }
+    }
+    else if (last == '+' || last == '*' || last == '/')
+    {
+        _lastType = LastType.Operation;
+    }
+    else
+    {
+        _lastType = LastType.Digit;
+    }
+
+    UpdateDisplay();
+}
+
     private void Dot_Click(object? sender, RoutedEventArgs e)
     {
         if (sender is not Button button)
@@ -99,10 +186,21 @@ public partial class MainWindow : Window
 
         string bracket = button.Content?.ToString() ?? "";
 
-        if (!(_lastType == LastType.Operation))
+        if (!(_lastType == LastType.Operation ||
+        _lastType == LastType.Empty ||
+        _lastType == LastType.OpnBracket ||
+        _lastType == LastType.UnaryMinus))
             return;
 
-        _currentInput += " " + bracket;
+        if (_currentInput == "0")
+            _currentInput = bracket;
+        else
+        {
+            if (_lastType == LastType.Operation)
+                _currentInput += " ";
+
+            _currentInput += bracket;
+        }
             
         _lastType = LastType.OpnBracket;
         UpdateDisplay();
@@ -115,7 +213,7 @@ public partial class MainWindow : Window
 
         string bracket = button.Content?.ToString() ?? "";
 
-        if (!(_lastType == LastType.Digit))
+        if (!(_lastType == LastType.Digit || _lastType == LastType.ClsBracket))
             return;
 
         _currentInput += bracket;
@@ -129,12 +227,28 @@ public partial class MainWindow : Window
         if (sender is not Button button)
             return;
 
-        if(!(_lastType == LastType.Digit || _lastType == LastType.ClsBracket))
-            return
-;
         string operation = button.Content?.ToString() ?? "";
-        _currentInput += " " + operation;
-        _lastType = LastType.Operation;
+
+        if (operation == "-" &&
+        (_lastType == LastType.Empty ||
+         _lastType == LastType.Operation ||
+         _lastType == LastType.OpnBracket))
+        {
+            if (_lastType == LastType.Operation)
+                _currentInput += " ";
+
+            _currentInput += "-";
+            _lastType = LastType.UnaryMinus;
+        }
+        else
+        {
+            if (!(_lastType == LastType.Digit ||
+              _lastType == LastType.ClsBracket))
+            return;
+
+            _currentInput += " " + operation;
+            _lastType = LastType.Operation;
+        }
 
         UpdateDisplay();
     }
@@ -144,6 +258,55 @@ public partial class MainWindow : Window
         ResetState();
         UpdateDisplay();
         _lastType = LastType.Empty;
+    }
+
+    private void Func_Click(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Button button)
+            return;
+
+        string func = button.Content?.ToString() ?? "";
+
+        if (!(_lastType == LastType.Operation ||
+            _lastType == LastType.Empty ||
+            _lastType == LastType.OpnBracket ||
+            _lastType == LastType.UnaryMinus))
+            return;
+
+        if (_currentInput == "0")
+            _currentInput = func;
+        else
+        {
+            if(_lastType == LastType.Operation)
+                _currentInput += " ";
+            _currentInput += func + "(";
+        }
+            
+        _lastType = LastType.OpnBracket;
+        UpdateDisplay();
+    }
+
+    private void Const_Click(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Button button)
+            return;
+
+        if (_lastType == LastType.ClsBracket)
+            return;
+
+        string constt = button.Content?.ToString() ?? "";
+
+        if (_currentInput == "0")
+            _currentInput = constt;
+        else
+        {
+            if(_lastType == LastType.Operation)
+                _currentInput += " ";
+            _currentInput += constt;
+        }
+         
+        _lastType = LastType.Digit;
+        UpdateDisplay();
     }
 
     private async void Calculate_Click(object? sender, RoutedEventArgs e)
@@ -203,6 +366,7 @@ public partial class MainWindow : Window
             IsEnabled = true;
         }
     }
+
 
     private void UpdateDisplay()
     {
