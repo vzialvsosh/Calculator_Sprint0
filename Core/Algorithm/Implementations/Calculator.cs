@@ -15,7 +15,7 @@ public class Calculator : ICalculator
   public double Calculate(string s)
   {
     double result = Calculate(_parser.Parse(s));
-    if (result == double.NaN || result == double.PositiveInfinity || result == double.NegativeInfinity)
+    if (double.IsNaN(result) || result == double.PositiveInfinity || result == double.NegativeInfinity)
       throw new ArgumentException("Arithmetical error occured while calculating.");
     return result;
   }
