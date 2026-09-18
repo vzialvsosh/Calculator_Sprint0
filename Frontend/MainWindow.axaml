@@ -1,0 +1,107 @@
+<Window
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UI"
+    x:Class="UI.MainWindow"
+    Title="Calculator"
+    Width="785"
+    Height="520">
+
+    <Window.Styles>
+        <Style Selector="Button">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="22"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid Margin="10"
+      RowDefinitions="100,50,75,75,75,75"
+      ColumnDefinitions="75,75,75,75,75,*"
+      RowSpacing="10"
+      ColumnSpacing="10">
+
+    <Border Grid.Row="0"
+            Grid.ColumnSpan="5"
+            Padding="15"
+            ClipToBounds="True"
+            Background="#555555"
+            BorderBrush="#181818"
+            BorderThickness="1"
+            CornerRadius="8">
+
+        <TextBlock x:Name="Display"
+                    Text="0"
+                    FontSize="36"
+                    TextAlignment="Right"
+                    VerticalAlignment="Center"/>
+    </Border>
+    
+    <Button Grid.Row="1" Grid.Column="0" Content="log" Click="Func_Click"/>
+    <Button Grid.Row="1" Grid.Column="1" Content="C" Click="Clear_Click"/>
+    <Button Grid.Row="1" Grid.Column="2" Content="." Click="Dot_Click"/>
+    <Button Grid.Row="1" Grid.Column="3" Content="⌫" Click="Backspace_Click"/>
+    <Button Grid.Row="1" Grid.Column="4" Content="=" Click="Calculate_Click"/>
+
+    <Button Grid.Row="2" Grid.Column="0" Content="sin" Click="Func_Click"/>
+    <Button Grid.Row="2" Grid.Column="1" Content="1" Click="Digit_Click"/>
+    <Button Grid.Row="2" Grid.Column="2" Content="2" Click="Digit_Click"/>
+    <Button Grid.Row="2" Grid.Column="3" Content="3" Click="Digit_Click"/>
+    <Button Grid.Row="2" Grid.Column="4" Content="*" Click="Operation_Click"/>
+    
+    <Button Grid.Row="3" Grid.Column="0" Content="cos" Click="Func_Click"/>
+    <Button Grid.Row="3" Grid.Column="1" Content="4" Click="Digit_Click"/>
+    <Button Grid.Row="3" Grid.Column="2" Content="5" Click="Digit_Click"/>
+    <Button Grid.Row="3" Grid.Column="3" Content="6" Click="Digit_Click"/>
+    <Button Grid.Row="3" Grid.Column="4" Content="/" Click="Operation_Click"/>
+
+    <Button Grid.Row="4" Grid.Column="0" Content="e" Click="Const_Click"/>
+    <Button Grid.Row="4" Grid.Column="1" Content="7" Click="Digit_Click"/>
+    <Button Grid.Row="4" Grid.Column="2" Content="8" Click="Digit_Click"/>
+    <Button Grid.Row="4" Grid.Column="3" Content="9" Click="Digit_Click"/>
+    <Button Grid.Row="4" Grid.Column="4" Content="+" Click="Operation_Click"/>
+
+    <Button Grid.Row="5" Grid.Column="0" Content="pi" Click="Const_Click"/>
+    <Button Grid.Row="5" Grid.Column="1" Content="0" Click="Digit_Click"/>
+    <Button Grid.Row="5" Grid.Column="2" Content="(" Click="OpnBracket_Click"/>
+    <Button Grid.Row="5" Grid.Column="3" Content=")" Click="ClsBracket_Click"/>
+    <Button Grid.Row="5" Grid.Column="4" Content="-" Click="Operation_Click"/>
+
+    <Grid Grid.Column="5"
+      Grid.Row="0"
+      Grid.RowSpan="6"
+      Margin="10"
+      RowDefinitions="Auto,Auto,*">
+
+        <TextBlock Text="История"
+                   FontSize="22"
+                   Margin="0,0,0,10"/>
+
+        <TextBlock x:Name="HistoryStatus"
+                   Grid.Row="1"
+                   TextWrapping="Wrap"
+                   Margin="0,0,0,8"/>
+
+        <ListBox x:Name="HistoryList"
+                 Grid.Row="2"
+                 SelectionChanged="History_SelectionChanged">
+
+            <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="local:HistoryItem">
+                    <StackPanel Margin="4" Spacing="4">
+                        <TextBlock Text="{Binding Expression}"
+                                   TextWrapping="Wrap"/>
+
+                        <TextBlock Text="{Binding Result, StringFormat='= {0}'}"
+                                   FontWeight="Bold"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+        </ListBox>
+    </Grid>
+
+</Grid>
+</Window>
